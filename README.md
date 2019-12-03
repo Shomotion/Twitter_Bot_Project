@@ -5,3 +5,6 @@ social_spambots.csv
 traditional_spambots.csv
 
 social_spambots.csv has been produced by combining the 3 social_spambots users.csv files, and the same is true for traditional_spambots.csv
+
+command:
+sed 's/^.*$/"traditional_spambot",&/' traditional_spambots.csv > traditional_spambots_labeled.csv
