@@ -14,11 +14,25 @@ class DataReader:
         self.header = []
         self.instances = []
         self.labels = []
-        self.isContinuous = {}
+        self.isContinuous = {} #label showing which columns are continous
         self.discreteValues = {}
+        self.columns = ["label","id","name","screen_name","statuses_count","followers_count","friends_count","favourites_count","listed_count","url","lang","time_zone",
+                                "location","default_profile","default_profile_image","geo_enabled","profile_image_url","profile_banner_url","profile_use_background_image",
+                                "profile_background_image_url_https","profile_text_color","profile_image_url_https","profile_sidebar_border_color","profile_background_tile",
+                                "profile_sidebar_fill_color","profile_background_image_url","profile_background_color","profile_link_color","utc_offset","is_translator",
+                                "follow_request_sent","protected","verified","notifications","description","contributors_enabled","following","created_at","timestamp","crawled_at",
+                                "updated","test_set_1","test_set_2"]
+        self.columnsToKeep = ["label","statuses_count","followers_count","friends_count","favourites_count","listed_count","lang","time_zone",
+                                "location","is_translator",
+                                "follow_request_sent","protected","verified","notifications","contributors_enabled","following"]
 
 
     def readData(self):
+        indexesToDelete = []
+        for i in range(len(self.columns)):
+            if(self.columns[i] not in self.columnsToKeep):
+                indexesToDelete.append(i)
+        print(indexesToDelete)
         # open the file
         with open(self.datafile, encoding="UTF-8") as file:
             reader = csv.reader(file)
@@ -27,6 +41,14 @@ class DataReader:
             self.rows = list(reader)
 
         # save the header
+        for i in range(len(self.rows)):
+            #print(self.rows[i])
+            for k in range(len(self.rows[i])-1,-1,-1):
+                if k in indexesToDelete:
+                    del self.rows[i][k]
+            #break
+            
+        print(self.rows[0],self.rows[1])
         self.header = self.rows[DataReader.LABEL_COLUMN]
 
         # check which columns are continuous
@@ -36,8 +58,10 @@ class DataReader:
         self.findDiscreteValues()
 
         # process the data
+        #print("column labels",self.header,len(self.header))
+        #print("continuous:",self.isContinuous,len(self.isContinuous))
         data = []
-        for i in range(1, len(self.rows)):
+        for i in range(1, len(self.rows)): #in order 
             instance, label = self.process(self.rows[i])
 
             self.instances.append(instance)
@@ -90,6 +114,7 @@ class DataReader:
 
         # grab the instance
         instance = []
+        #print("processing")
         for col in range(len(row)):
             if col == DataReader.LABEL_COLUMN:
                 continue
@@ -103,7 +128,8 @@ class DataReader:
                 # convert to one hot coding
                 vals = self.onehot(col, val)
                 instance.extend(vals)
-
+        #print("instance",instance)
+        #print("label",label)
         return instance, label
 
 
