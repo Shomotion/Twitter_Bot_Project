@@ -32,7 +32,7 @@ class DataReader:
         for i in range(len(self.columns)):
             if(self.columns[i] not in self.columnsToKeep):
                 indexesToDelete.append(i)
-        print(indexesToDelete)
+        #print(indexesToDelete)
         # open the file
         with open(self.datafile, encoding="UTF-8") as file:
             reader = csv.reader(file)
