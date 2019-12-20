@@ -32,7 +32,7 @@ class DataReader:
         self.columnsColorsOnly = ["label","profile_text_color", "profile_background_color", "profile_link_color", "profile_sidebar_fill_color", "profile_text_color"]
         self.forbiddenColumns = ["id", "name", "screen_name", "url", "default_profile_image", "profile_image_url", "profile_banner_url", "profile_background_image_url_https",
                                  "profile_image_url_https", "profile_background_image_url", "created_at", "timestamp", "crawled_at", "updated", "test_set_1", "test_set_2"]
-        self.columnsToKeep = self.columnsColorsOnly
+        self.columnsToKeep = self.columnsColors
         outputFile.write("\"")
         outputFile.write("\",\"".join(self.columnsToKeep))
         outputFile.write("\"")
