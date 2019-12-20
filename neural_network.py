@@ -6,7 +6,8 @@ import time
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
-def runNetwork(train, valid, test, neurons, learningRate, threshold, numAttributes, possibleLabels):
+
+def runNetwork(train, valid, test, neurons, learningRate, threshold, numAttributes, possibleLabels, outputFile):
     numLabels = len(possibleLabels)
     if numLabels == 2:
         numLabels = 1 # binary classification uses a single variable that is 0 or 1
@@ -58,12 +59,12 @@ def runNetwork(train, valid, test, neurons, learningRate, threshold, numAttribut
 
     # setup the params
     epoch = 0
-    printEvery = 50
-    maxEpochs  = 500
+    printEvery = 1
+    maxEpochs = 500
     totalTime = 0
     validAcc = 0.0
 
-    while epoch < maxEpochs:# and validAcc < 0.99:
+    while epoch < maxEpochs and validAcc < 0.99:
         epoch += 1
 
         # train the network
@@ -79,14 +80,14 @@ def runNetwork(train, valid, test, neurons, learningRate, threshold, numAttribut
 
             print("Training:")
             cm = confusion_matrix.buildConfusionMatrix(p, train[1], numLabels, threshold)
-            confusion_matrix.printConfusionMatrix(cm, possibleLabels)
-            confusion_matrix.printAccuracy(cm)
+            confusion_matrix.printConfusionMatrix(cm, possibleLabels, None)
+            confusion_matrix.printAccuracy(cm, None)
 
             print("\nValidation:")
             p = sess.run(yhat, feed_dict={x: valid[0]})
             cm = confusion_matrix.buildConfusionMatrix(p, valid[1], numLabels, threshold)
-            confusion_matrix.printConfusionMatrix(cm, possibleLabels)
-            confusion_matrix.printAccuracy(cm)
+            confusion_matrix.printConfusionMatrix(cm, possibleLabels, None)
+            confusion_matrix.printAccuracy(cm, outputFile)
 
     # evaluate the test accuracy
     p = sess.run(yhat, feed_dict={x: test[0]})
@@ -94,8 +95,8 @@ def runNetwork(train, valid, test, neurons, learningRate, threshold, numAttribut
     print("\n***************************************************")
     print("\nConfusion Matrix on Test Set:")
     cm = confusion_matrix.buildConfusionMatrix(p, test[1], numLabels, threshold)
-    confusion_matrix.printConfusionMatrix(cm, possibleLabels)
-    confusion_matrix.printAccuracy(cm)
+    confusion_matrix.printConfusionMatrix(cm, possibleLabels, outputFile)
+    confusion_matrix.printAccuracy(cm, outputFile)
     print("Average time:", totalTime / epoch)
 
 
@@ -107,12 +108,14 @@ def main():
     threshold = float(sys.argv[4])
     trainPerc = float(sys.argv[5])
     seed = int(sys.argv[6])
+    title = sys.argv[7]
 
     # set up the RNG
     random.seed(seed)
+    outputFile = open("results_nn_" + title + "_" + sys.argv[2] + "_" + sys.argv[3] + "_" + sys.argv[4] + "_" + sys.argv[5] + "_" + sys.argv[6] + ".txt", "w")
 
     # read in the data, we edited parts of this to get rid of columns that were irrelevant
-    reader = data_reader.DataReader(datafile, trainPerc) 
+    reader = data_reader.DataReader(datafile, trainPerc, outputFile)
     numAttributes, numLabels = reader.readData()
     possibleLabels = reader.discreteValues[data_reader.DataReader.LABEL_COLUMN]
 
@@ -120,7 +123,9 @@ def main():
     train, valid, test = reader.splitData()
 
     # train the network
-    runNetwork(train, valid, test, neurons, learningRate, threshold, numAttributes, possibleLabels)
+    runNetwork(train, valid, test, neurons, learningRate, threshold, numAttributes, possibleLabels, outputFile)
+
+    outputFile.close()
 
 
 if __name__ == "__main__":

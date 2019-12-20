@@ -244,3 +244,5 @@ genuine_account social_spambot  traditional_spambot
 008     014     482     | traditional_spambot
 Accuracy: 0.9542
 Average time: 0.96084375
+
+Confidence Interval [.9455, .9629]
