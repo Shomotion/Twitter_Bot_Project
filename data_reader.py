@@ -24,12 +24,12 @@ class DataReader:
                                 "follow_request_sent","protected","verified","notifications","description","contributors_enabled","following","created_at","timestamp","crawled_at",
                                 "updated","test_set_1","test_set_2"]
         self.columnsColors = ["label", "profile_text_color", "profile_background_color", "profile_link_color",
-                         "profile_sidebar_fill_color", "Profile_text_color", "statuses_count", "followers_count",
+                         "profile_sidebar_fill_color", "statuses_count", "followers_count",
                          "friends_count", "favourites_count", "listed_count", "lang", "time_zone", "location",
                          "is_translator", "follow_request_sent", "protected", "verified", "notifications",
                          "contributors_enabled", "following"]
         self.columnsNoColors = ["label","statuses_count","followers_count","friends_count","favourites_count","listed_count","lang","time_zone","location","is_translator","follow_request_sent","protected","verified","notifications","contributors_enabled","following"]
-        self.columnsColorsOnly = ["label","profile_text_color", "profile_background_color", "profile_link_color", "profile_sidebar_fill_color", "profile_text_color"]
+        self.columnsColorsOnly = ["label","profile_text_color", "profile_background_color", "profile_link_color", "profile_sidebar_fill_color"]
         self.forbiddenColumns = ["id", "name", "screen_name", "url", "default_profile_image", "profile_image_url", "profile_banner_url", "profile_background_image_url_https",
                                  "profile_image_url_https", "profile_background_image_url", "created_at", "timestamp", "crawled_at", "updated", "test_set_1", "test_set_2"]
         self.columnsToKeep = self.columnsColors
