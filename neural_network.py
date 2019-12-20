@@ -111,8 +111,8 @@ def main():
     # set up the RNG
     random.seed(seed)
 
-    # read in the data
-    reader = data_reader.DataReader(datafile, trainPerc)
+    # read in the data, we edited parts of this to get rid of columns that were irrelevant
+    reader = data_reader.DataReader(datafile, trainPerc) 
     numAttributes, numLabels = reader.readData()
     possibleLabels = reader.discreteValues[data_reader.DataReader.LABEL_COLUMN]
 
