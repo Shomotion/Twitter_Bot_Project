@@ -56,7 +56,7 @@ def buildNDConfusionMatrix(p, labels, numLabels):
     return matrix
 
 
-def printConfusionMatrix(matrix, possibleLabels):
+def printConfusionMatrix(matrix, possibleLabels, outputFile):
     rows = list(matrix.keys())
     cols = list(matrix.keys())
     rows.sort()
@@ -68,16 +68,22 @@ def printConfusionMatrix(matrix, possibleLabels):
         col = int(col)
         header += str(possibleLabels[col]) + "\t"
     print(header)
+    if outputFile is not None:
+        outputFile.write("\n" + header + "\n")
 
     # print each row
     for row in rows:
         row = int(row)
         for col in cols:
             print("%03d " % matrix[row][col], end="\t")
+            if outputFile is not None:
+                outputFile.write("%03d " % matrix[row][col])
         print("|", possibleLabels[row])
+        if outputFile is not None:
+            outputFile.write("| " + possibleLabels[row] + "\n")
 
 
-def printAccuracy(matrix):
+def printAccuracy(matrix, outputFile):
     total = 0
     correct = 0
     for i in matrix:
@@ -87,3 +93,7 @@ def printAccuracy(matrix):
                 correct += matrix[i][j]
 
     print("Accuracy:", "{0:.4f}".format(correct / total))
+
+    if outputFile is not None:
+        line = "\n{0:.4f}".format(correct / total)
+        outputFile.write(line)

@@ -6,7 +6,7 @@ class DataReader:
     # the column of the label
     LABEL_COLUMN = 0
 
-    def __init__(self, datafile, trainPerc):
+    def __init__(self, datafile, trainPerc, outputFile):
         self.datafile = datafile
         self.trainPerc = trainPerc
         self.validPerc = (1.0 - trainPerc) / 2
@@ -14,7 +14,7 @@ class DataReader:
         self.header = []
         self.instances = []
         self.labels = []
-        self.isContinuous = {} #label showing which columns are continous
+        self.isContinuous = {}  # label showing which columns are continuous
         self.discreteValues = {}
         self.columns = ["label","id","name","screen_name","statuses_count","followers_count","friends_count","favourites_count","listed_count","url","lang","time_zone",
                                 "location","default_profile","default_profile_image","geo_enabled","profile_image_url","profile_banner_url","profile_use_background_image",
@@ -22,9 +22,19 @@ class DataReader:
                                 "profile_sidebar_fill_color","profile_background_image_url","profile_background_color","profile_link_color","utc_offset","is_translator",
                                 "follow_request_sent","protected","verified","notifications","description","contributors_enabled","following","created_at","timestamp","crawled_at",
                                 "updated","test_set_1","test_set_2"]
-        self.columnsToKeep = ["label","statuses_count","followers_count","friends_count","favourites_count","listed_count","lang","time_zone",
-                                "location","is_translator",
-                                "follow_request_sent","protected","verified","notifications","contributors_enabled","following"]
+        self.columnsColors = ["label", "profile_text_color", "profile_background_color", "profile_link_color",
+                         "profile_sidebar_fill_color", "Profile_text_color", "statuses_count", "followers_count",
+                         "friends_count", "favourites_count", "listed_count", "lang", "time_zone", "location",
+                         "is_translator", "follow_request_sent", "protected", "verified", "notifications",
+                         "contributors_enabled", "following"]
+        self.columnsNoColors = ["label","statuses_count","followers_count","friends_count","favourites_count","listed_count","lang","time_zone","location","is_translator","follow_request_sent","protected","verified","notifications","contributors_enabled","following"]
+        self.columnsColorsOnly = ["label","profile_text_color", "profile_background_color", "profile_link_color", "profile_sidebar_fill_color", "profile_text_color"]
+        self.forbiddenColumns = ["id", "name", "screen_name", "url", "default_profile_image", "profile_image_url", "profile_banner_url", "profile_background_image_url_https",
+                                 "profile_image_url_https", "profile_background_image_url", "created_at", "timestamp", "crawled_at", "updated", "test_set_1", "test_set_2"]
+        self.columnsToKeep = self.columnsColorsOnly
+        outputFile.write("\"")
+        outputFile.write("\",\"".join(self.columnsToKeep))
+        outputFile.write("\"")
 
 
     def readData(self):
@@ -120,7 +130,7 @@ class DataReader:
                 continue
 
             val = row[col]
-            if self.isContinuous[col]: # TODO currently crashing here
+            if self.isContinuous[col]:
                 # keep the value as a float
                 val = float(val)
                 instance.append(val)
