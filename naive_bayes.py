@@ -1,3 +1,4 @@
+import sys
 import pandas as pd
 import nltk
 from nltk.stem import PorterStemmer
@@ -23,7 +24,7 @@ def print_elapsed(msg, start_time):
 
 
 def main():
-    file = "tweet_data_files/data.csv"
+    file = sys.argv[1]
     start_time = time.time()
     print("reading " + file + "...", end="")
     df = pd.read_csv(file, header=0)
